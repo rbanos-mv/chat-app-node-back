@@ -10,16 +10,23 @@ const cors = require('cors');
 app.use(cors());
 
 const socketIO = require('socket.io')(http, {
-    cors: {
-        origin: "http://localhost:3000"
-    }
+  cors: {
+    origin: "http://localhost:3000"
+  }
 });
 
 socketIO.on('connection', (socket) => {
-    console.log(`⚡: ${socket.id} user just connected!`);
-    socket.on('disconnect', () => {
-      console.log('🔥: A user disconnected');
-    });
+  console.log(`⚡: ${socket.id} user just connected!`);
+
+  //Listens and broadcast the message to all users connected
+  socket.on('message', (data) => {
+    console.log(data);
+    socketIO.emit('messageResponse', data);
+  });
+
+  socket.on('disconnect', () => {
+    console.log('🔥: A user disconnected');
+  });
 });
 
 app.get('/api', (req, res) => {
