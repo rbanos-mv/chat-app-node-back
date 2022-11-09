@@ -26,10 +26,14 @@ socketIO.on('connection', (socket) => {
   console.log(`⚡: ${socket.id} user just connected!`);
 
   //Listens and broadcast the message to all users connected
-  socket.on('message', (data) => {
-    console.log(data);
-    socketIO.emit('messageResponse', data);
-  });
+  socket.on("message", data => {
+    messagesData["messages"].push(data)
+    const stringData = JSON.stringify(messagesData, null, 2)
+    fs.writeFile("messages.json", stringData, (err)=> {
+      console.error(err)
+    })
+    socketIO.emit("messageResponse", data)
+  })
 
   socket.on('typing', (data) => socket.broadcast.emit('typingResponse', data));
 
