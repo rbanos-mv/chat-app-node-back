@@ -1,3 +1,8 @@
+const fs = require('fs');
+//Gets the messages.json file and parse the file into JavaScript object
+const rawData = fs.readFileSync('messages.json');
+const messagesData = JSON.parse(rawData);
+
 //index.js
 const express = require('express');
 const app = express();
@@ -47,10 +52,9 @@ socketIO.on('connection', (socket) => {
   });
 });
 
+//Returns the JSON file
 app.get('/api', (req, res) => {
-  res.json({
-    message: 'Hello world',
-  });
+  res.json(messagesData);
 });
 
 http.listen(PORT, () => {
